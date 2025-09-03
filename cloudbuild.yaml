@@ -1,0 +1,22 @@
+steps:
+# 步驟 1: 建置容器映像檔
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-east1-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-automated-app:$COMMIT_SHA', '.']
+
+# 步驟 2: 將映像檔推送到 Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-east1-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-automated-app:$COMMIT_SHA']
+
+# 步驟 3: 部署到 Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'deploy'
+    - 'my-automated-app-service'  # Cloud Run 服務的名稱
+    - '--image=asia-east1-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-automated-app:$COMMIT_SHA'
+    - '--region=asia-east1'
+    - '--platform=managed'
+    - '--allow-unauthenticated' # 允許公開存取，方便測試
+images:
+- 'asia-east1-docker.pkg.dev/$PROJECT_ID/my-app-repo/my-automated-app:$COMMIT_SHA'
