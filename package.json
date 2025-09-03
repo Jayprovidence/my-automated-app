@@ -1,0 +1,12 @@
+{
+  "name": "my-automated-app",
+  "version": "1.0.0",
+  "description": "An app deployed automatically via CI/CD",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
